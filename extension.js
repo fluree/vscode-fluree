@@ -3,8 +3,8 @@
 const vscode = require('vscode');
 const getSchema = require('./helperFunctions/fetchDBInfo').getSchema;
 const getEndpoint = require('./helperFunctions/fetchDBInfo').getEndpoint;
-const parseSmartFunction = require('./helperFunctions/parseSmartFunction');
-const fnsToClojure = parseSmartFunction.fnsToClojure;
+const fnsToClojure = require('./helperFunctions/parseSmartFunction').fnsToClojure;
+const addToFnFile = require('./helperFunctions/parseSmartFunction').addToFnFile;
 const checkInitiateProject = require('./helperFunctions/bootstrap').checkInitiateProject;
 const createFnFile = require('./helperFunctions/bootstrap').createFnFile;
 
@@ -15,7 +15,6 @@ const createFnFile = require('./helperFunctions/bootstrap').createFnFile;
  * @param {vscode.ExtensionContext} context
  */
 
-
 function activate(context) {
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
@@ -25,10 +24,11 @@ function activate(context) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with  registerCommand
 	// The commandId parameter must match the command field in package.json
-	let getDb = vscode.commands.registerCommand('extension.getDB', function(){
+	let initSmartFunction = vscode.commands.registerCommand('extension.initSmartFunction', function(){
 		let db, network, ip;
 		let root = vscode.workspace.rootPath;
 		vscode.window.showInformationMessage("Initiating Smart Function Project.")
+
 		checkInitiateProject(root)
 		.then(res => vscode.workspace.findFiles('flureeconfig.json', null, 1))
 		.then(res => getEndpoint(res))
@@ -41,14 +41,50 @@ function activate(context) {
 		.then(res => {
 			let { collections, predicates, functions, auth } = res;
 			let cljFunctions = fnsToClojure(functions);
-			console.log("CLJ FUNCTIONS", cljFunctions)
 			return createFnFile(cljFunctions, root)
 		})
 		.then(res => vscode.window.showInformationMessage("Smart Function Project successfully initiated."))
-		.catch(err => vscode.window.showErrorMessage("There was an error initiating the smart function project." + err))
+		.catch(err => vscode.window.showErrorMessage("There was an error initiating the smart function project. " + err))
 	})
 
-	context.subscriptions.push(getDb);
+	let addFunction = vscode.commands.registerCommand('extension.addSmartFunction', function(){
+		let functionObject = {}
+		let root = vscode.workspace.rootPath;
+
+		vscode.window.showInputBox({prompt: "What is the name of your smart function?"})
+		.then(res => functionObject["_fn/name"] = res)
+		.then(res => vscode.window.showInputBox({prompt: "Input your function code here."}))
+		.then(res => functionObject["_fn/code"] = res)
+		.then(res => vscode.window.showInputBox({prompt: "What params does your function take? Press enter if none."}))
+		.then(res => {
+			let params = res ? "[" + res + "]" : "[ ]"
+			functionObject["_fn/params"] = params
+			return;
+		})
+		.then(res => addToFnFile(functionObject, root))
+		.catch(err => vscode.window.showErrorMessage(err))
+	})
+
+	let refreshCustomFunctions = vscode.commands.registerCommand('extension.refreshCustomFunctions', function(){
+		let root = vscode.workspace.rootPath;
+		vscode.workspace.findFiles('flureeconfig.json', null, 1)
+		.then(res => getEndpoint(res))
+		.then(res => {
+			db = res.db;
+			network = res.network;
+			ip = res.ip;
+			return getSchema(`${ip}/fdb/${network}/${db}`)
+		})
+		.then(res => {
+			let { collections, predicates, functions, auth } = res;
+			let cljFunctions = fnsToClojure(functions);
+			return createFnFile(cljFunctions, root)
+		})
+		.then(res => console.log(res))
+		.catch(err => vscode.window.showErrorMessage("There was an error refreshing the custom functions: " + err))
+	})
+
+	context.subscriptions.push(initSmartFunction, addFunction, refreshCustomFunctions);
 }
 exports.activate = activate;
 

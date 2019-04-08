@@ -1,3 +1,6 @@
+const fs = require('fs');
+const vscode = require('vscode');
+
 function insertCtxParam(codeStr){
 	const regExp = /\([a-zA-Z-\?\<\>\=\_]+ /g;
 	const matches = codeStr.match(regExp) || [];
@@ -46,6 +49,22 @@ function fnsToClojure(functions){
 	return functionString
 }
 
+function addToFnFile(functionObject, root){
+	const splitIndex = root.lastIndexOf("/");
+	const appName = root.substr(splitIndex + 1);
+	const dirName = appName.replace(/-/g, "_");
+	const fileContents = fnsToClojure([functionObject]);
+
+	const filePath = `${root}/src/${dirName}/custom_functions.clj`;
+	fs.access(filePath, fs.constants.W_OK, (err) => vscode.window.showErrorMessage(err))
+	fs.appendFile(filePath, fileContents, function(err){
+		if(err){
+			vscode.window.showErrorMessage(err)
+		}
+	})
+}
+
 module.exports = {
-	fnsToClojure
+	fnsToClojure,
+	addToFnFile
 };

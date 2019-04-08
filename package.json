@@ -10,19 +10,24 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.helloWorld",
-		"onCommand:extension.getDB"
+		"onCommand:extension.initSmartFunction",
+		"onCommand:extension.addSmartFunction",
+		"onCommand:extension.refreshCustomFunctions"
 	],
 	"main": "./extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.helloWorld",
-				"title": "Hello World"
+				"command": "extension.initSmartFunction",
+				"title": "Fluree: Init Smart Function"
 			},
 			{
-				"command": "extension.getDB",
-				"title": "Get DB"
+				"command": "extension.addSmartFunction",
+				"title": "Fluree: Add Smart Function"
+			},
+			{
+				"command": "extension.refreshCustomFunctions",
+				"title": "Fluree: Refresh Custom Functions"
 			}
 		]
 	},
