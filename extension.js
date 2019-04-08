@@ -1,8 +1,12 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
-const fetch = require('isomorphic-fetch');
-const fs = require('fs');
+const getSchema = require('./helperFunctions/fetchDBInfo').getSchema;
+const getEndpoint = require('./helperFunctions/fetchDBInfo').getEndpoint;
+const parseSmartFunction = require('./helperFunctions/parseSmartFunction');
+const fnsToClojure = parseSmartFunction.fnsToClojure;
+const checkInitiateProject = require('./helperFunctions/bootstrap').checkInitiateProject;
+const createFnFile = require('./helperFunctions/bootstrap').createFnFile;
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -11,62 +15,6 @@ const fs = require('fs');
  * @param {vscode.ExtensionContext} context
  */
 
-
-function parseJSON(response) {
-	return response.json().then(function (json) {
-	  const newResponse = Object.assign(response, { json });
-  
-	  if (response.status < 300) {
-		return newResponse;
-	  } else {
-		throw newResponse;
-	  }
-	});
-  }
-
-function getSchema(baseEndpoint){
-	const headers = {'Content-Type': 'application/json'}
-
-	const query = {
-		collections: { select: ["*"], from: "_collection" },
-		predicates: { select: ["*"], from: "_predicate" },
-		functions: { select: ["*"], from: "_fn" },
-		auth: { select: ["*", {"_auth/roles": ["*", {"_role/rules": ["*", {"_rule/fn": ["*"]}]}]}], from: "_auth"}
-	};
-
-	const fetchOpts = { 
-		headers: headers,
-		method: "POST", 
-		body: JSON.stringify(query)
-	};
-
-	return fetch(`${baseEndpoint}/multi-query`, fetchOpts)
-}
-
-function fnsToClojure(functions){
-	let functionString = ""
-
-	for(let i = 0; i < functions.length; i++){
-		let name = functions[i]["_fn/name"];
-		let params = functions[i]["_fn/params"]
-		params = params ? params : "[ ]" 
-		let code = functions[i]["_fn/code"]
-
-		if(name !== "true" && name !== "false"){
-			functionString = functionString + `(defn ${name}
-			${params}
-			${code}) \n`
-		} 
-	}
-
-	return functionString
-}
-
-function createFnFile(cljFunctions, root){
-	fs.appendFile(`${root}/myfunctionsfile.clj`, cljFunctions, function(err){
-		console.log(err)
-	})
-}
 
 function activate(context) {
 
@@ -78,38 +26,27 @@ function activate(context) {
 	// Now provide the implementation of the command with  registerCommand
 	// The commandId parameter must match the command field in package.json
 	let getDb = vscode.commands.registerCommand('extension.getDB', function(){
-		vscode.workspace.findFiles('**/*.json', null, 1)
+		let db, network, ip;
+		let root = vscode.workspace.rootPath;
+		vscode.window.showInformationMessage("Initiating Smart Function Project.")
+		checkInitiateProject(root)
+		.then(res => vscode.workspace.findFiles('flureeconfig.json', null, 1))
+		.then(res => getEndpoint(res))
 		.then(res => {
-			let uri = res[0]["path"]
-			vscode.workspace.openTextDocument(uri).then(doc => {
-				let text= doc.getText();
-				text = JSON.parse(text)
-				let { network, db, ip } = text;
-				let baseEndpoint = `${ip}/fdb/${network}/${db}`;
-				return baseEndpoint
-			}).then(endpoint => {
-				return getSchema(endpoint)
-			})
-			.then(res => parseJSON(res))
-			.then(res => res.json)
-			.then(res => {
-				let { collections, predicates, functions, auth } = res;
-				// console.log(collections, predicates, functions, auth)
-				let cljFunctions = fnsToClojure(functions)
-				console.log(cljFunctions);
-				return cljFunctions
-			})
-			.then(funs => {
-				let root = vscode.workspace.rootPath;
-				createFnFile(funs, root);
-				return;
+			db = res.db;
+			network = res.network;
+			ip = res.ip;
+			return getSchema(`${ip}/fdb/${network}/${db}`)
 		})
+		.then(res => {
+			let { collections, predicates, functions, auth } = res;
+			let cljFunctions = fnsToClojure(functions);
+			console.log("CLJ FUNCTIONS", cljFunctions)
+			return createFnFile(cljFunctions, root)
+		})
+		.then(res => vscode.window.showInformationMessage("Smart Function Project successfully initiated."))
+		.catch(err => vscode.window.showErrorMessage("There was an error initiating the smart function project." + err))
 	})
-	});
-
-	// let getConfig = vscode.commands.registerCommand('extension.getConfig', function(){
-
-	// })
 
 	context.subscriptions.push(getDb);
 }
