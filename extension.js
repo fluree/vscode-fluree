@@ -65,6 +65,14 @@ function activate(context) {
 		.catch(err => vscode.window.showErrorMessage(err))
 	})
 
+	let pushFnToDb = vscode.commands.registerCommand('extension.pushFnToDb', function(){
+		let functionObject = {}
+		let root = vscode.workspace.rootPath;
+
+		vscode.window.showInputBox({prompt: "What is the name of function you would like to push?"})
+		.then(res => console.log(res))
+	})
+
 	let refreshCustomFunctions = vscode.commands.registerCommand('extension.refreshCustomFunctions', function(){
 		let root = vscode.workspace.rootPath;
 		vscode.workspace.findFiles('flureeconfig.json', null, 1)
@@ -84,7 +92,7 @@ function activate(context) {
 		.catch(err => vscode.window.showErrorMessage("There was an error refreshing the custom functions: " + err))
 	})
 
-	context.subscriptions.push(initSmartFunction, addFunction, refreshCustomFunctions);
+	context.subscriptions.push(initSmartFunction, addFunction, pushFnToDb, refreshCustomFunctions);
 }
 exports.activate = activate;
 

@@ -42,7 +42,7 @@ function fnsToClojure(functions){
 		if(name !== "true" && name !== "false"){
 			functionString = functionString + `(defn ${name}
 			${paramsFormatted}
-			${codeFormatted}) \n \n`
+			${codeFormatted})\n\n`
 		} 
 	}
 
@@ -55,13 +55,9 @@ function addToFnFile(functionObject, root){
 	const dirName = appName.replace(/-/g, "_");
 	const fileContents = fnsToClojure([functionObject]);
 
-	const filePath = `${root}/src/${dirName}/custom_functions.clj`;
+	const filePath = `${root}/src/${dirName}/temp_custom_functions.clj`;
 	fs.access(filePath, fs.constants.W_OK, (err) => vscode.window.showErrorMessage(err))
-	fs.appendFile(filePath, fileContents, function(err){
-		if(err){
-			vscode.window.showErrorMessage(err)
-		}
-	})
+	return fs.appendFileSync(filePath, fileContents)
 }
 
 module.exports = {

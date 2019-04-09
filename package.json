@@ -12,6 +12,7 @@
 	"activationEvents": [
 		"onCommand:extension.initSmartFunction",
 		"onCommand:extension.addSmartFunction",
+		"onCommand:extension.pushFnToDb",
 		"onCommand:extension.refreshCustomFunctions"
 	],
 	"main": "./extension.js",
@@ -24,6 +25,10 @@
 			{
 				"command": "extension.addSmartFunction",
 				"title": "Fluree: Add Smart Function"
+			},
+			{
+				"command": "extension.pushFnToDb",
+				"title": "Fluree: Push Smart Function to DB"
 			},
 			{
 				"command": "extension.refreshCustomFunctions",

@@ -59,7 +59,7 @@ function createFuncFileHeaders(dirName){
 	return `(ns ${dirName}.custom_functions
 		(:refer-clojure :exclude [max min get inc dec + - * / quot mod == rem contains? get-in < <= > >=
 								  boolean re-find and or count str nth rand nil? hash-set empty? not])
-		(:require [smartfunctions.fns :refer :all]
+		(:require [${dirName}.fns :refer :all]
 				  [clojure.tools.logging :as log])) \n \n`}
 
 function createFnFile(cljFunctions, root){
