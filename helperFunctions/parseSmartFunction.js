@@ -2,7 +2,7 @@ const fs = require('fs');
 const vscode = require('vscode');
 
 function insertCtxParam(codeStr){
-	const regExp = /\([a-zA-Z-\?\<\>\=\_]+ /g;
+	const regExp = /\([a-zA-Z0-9-\+\?\<\>\=\_]+ /g;
 	const matches = codeStr.match(regExp) || [];
 	for(let i = 0, lastIndex = 0; i < matches.length; i++){
 		let startIndex = codeStr.indexOf(matches[i], lastIndex);
@@ -12,7 +12,8 @@ function insertCtxParam(codeStr){
 		codeStr = codeStr.slice(0, endIndex ) + "ctx " + codeStr.slice(endIndex)
 	}
 
-	const regExp2 = /\([a-zA-Z-\?\<\>\=\_]+\)/g;
+
+	const regExp2 = /\([a-zA-Z0-9-\+\?\<\>\=\_]+\)/g;
 	const matches2 = codeStr.match(regExp2) || [];
 		for(let i = 0, lastIndex2 = 0; i < matches2.length; i++){
 			let startIndex = codeStr.indexOf(matches2[i], lastIndex2);

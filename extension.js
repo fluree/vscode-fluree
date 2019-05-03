@@ -4,6 +4,7 @@ const vscode = require('vscode');
 const getSchema = require('./helperFunctions/fetchDBInfo').getSchema;
 const getEndpoint = require('./helperFunctions/fetchDBInfo').getEndpoint;
 const fnsToClojure = require('./helperFunctions/parseSmartFunction').fnsToClojure;
+const insertCtxParam = require('./helperFunctions/parseSmartFunction').insertCtxParam;
 const addToFnFile = require('./helperFunctions/parseSmartFunction').addToFnFile;
 const checkInitiateProject = require('./helperFunctions/bootstrap').checkInitiateProject;
 const createFnFile = require('./helperFunctions/bootstrap').createFnFile;
