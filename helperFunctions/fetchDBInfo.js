@@ -7,19 +7,19 @@ function getEndpoint(res){
 		let text= doc.getText();
 		text = JSON.parse(text)
 		let { network, db, ip } = text;
-		return {network: network, db: db, ip: ip};
+		return { network: network, db: db, ip: ip };
 	})
 	.catch(err => vscode.window.showErrorMessage(err.message))
 }
 
 function parseJSON(response) {
 	return response.json().then(function (json) {
-	  const newResponse = Object.assign(response, { json });
+		const newResponse = Object.assign(response, { json });
   
 	  if (response.status < 300) {
 		return newResponse;
 	  } else {
-		throw newResponse;
+		throw newResponse.json;
 	  }
 	});
   }
@@ -43,6 +43,7 @@ function getSchema(baseEndpoint){
 	return fetch(`${baseEndpoint}/multi-query`, fetchOpts)
 	.then(res => parseJSON(res))
 	.then(res => res.json)
+	.catch(err => vscode.window.showErrorMessage(JSON.stringify(err.message)))
 }
 
 module.exports = {

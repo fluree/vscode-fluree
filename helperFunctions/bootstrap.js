@@ -60,13 +60,13 @@ function createFuncFileHeaders(dirName){
 		(:refer-clojure :exclude [max min get inc dec + - * / quot mod == rem contains? get-in < <= > >=
 								  boolean re-find and or count str nth rand nil? hash-set empty? not])
 		(:require [${dirName}.fns :refer :all]
-				  [clojure.tools.logging :as log])) \n \n`}
+				  [clojure.tools.logging :as log]))`}
 
 function createFnFile(cljFunctions, root){
 	const splitIndex = root.lastIndexOf("/");
 	const appName = root.substr(splitIndex + 1);
 	const dirName = appName.replace(/-/g, "_");
-	const fileContents = createFuncFileHeaders(dirName) + cljFunctions;
+	const fileContents = createFuncFileHeaders(dirName) + "\n \n" + cljFunctions;
 
 	const filePath = `${root}/src/${dirName}/custom_functions.clj`
 

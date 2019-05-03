@@ -4,8 +4,9 @@ const vscode = require('vscode');
 const getSchema = require('./helperFunctions/fetchDBInfo').getSchema;
 const getEndpoint = require('./helperFunctions/fetchDBInfo').getEndpoint;
 const fnsToClojure = require('./helperFunctions/parseSmartFunction').fnsToClojure;
-const insertCtxParam = require('./helperFunctions/parseSmartFunction').insertCtxParam;
+const getClojureFnFromFile = require('./helperFunctions/parseSmartFunction').getClojureFnFromFile;
 const addToFnFile = require('./helperFunctions/parseSmartFunction').addToFnFile;
+const pushSmartFunctions = require('./helperFunctions/parseSmartFunction').pushSmartFunctions;
 const checkInitiateProject = require('./helperFunctions/bootstrap').checkInitiateProject;
 const createFnFile = require('./helperFunctions/bootstrap').createFnFile;
 
@@ -45,7 +46,7 @@ function activate(context) {
 			return createFnFile(cljFunctions, root)
 		})
 		.then(res => vscode.window.showInformationMessage("Smart Function Project successfully initiated."))
-		.catch(err => vscode.window.showErrorMessage("There was an error initiating the smart function project. " + err))
+		.catch(err => vscode.window.showErrorMessage("There was an error initiating the smart function project. " + JSON.stringify(err)))
 	})
 
 	let addFunction = vscode.commands.registerCommand('extension.addSmartFunction', function(){
@@ -66,14 +67,6 @@ function activate(context) {
 		.catch(err => vscode.window.showErrorMessage(err))
 	})
 
-	let pushFnToDb = vscode.commands.registerCommand('extension.pushFnToDb', function(){
-		let functionObject = {}
-		let root = vscode.workspace.rootPath;
-
-		vscode.window.showInputBox({prompt: "What is the name of function you would like to push?"})
-		.then(res => console.log(res))
-	})
-
 	let refreshCustomFunctions = vscode.commands.registerCommand('extension.refreshCustomFunctions', function(){
 		let root = vscode.workspace.rootPath;
 		vscode.workspace.findFiles('flureeconfig.json', null, 1)
@@ -89,8 +82,49 @@ function activate(context) {
 			let cljFunctions = fnsToClojure(functions);
 			return createFnFile(cljFunctions, root)
 		})
-		.then(res => console.log(res))
-		.catch(err => vscode.window.showErrorMessage("There was an error refreshing the custom functions: " + err))
+		.then(res => vscode.window.showInformationMessage("Successfully refreshed custom functions."))
+		.catch(err => vscode.window.showErrorMessage("There was an error refreshing the custom functions: " + JSOn.stringify(err)));
+	})
+
+	let pushFnToDb = vscode.commands.registerCommand('extension.pushFnToDb', function(){
+		let functionObject = {}
+		let root = vscode.workspace.rootPath;
+
+		vscode.window.showInputBox({prompt: "What is the name of function you would like to push?"})
+		.then(res => getClojureFnFromFile(root, res))
+		.then(res => {
+			let funcObj = res[0];
+			let { name, params, code } = funcObj;
+			vscode.window.showInputBox({prompt: `Your function name is ${name}. If this is correct, press enter, else edit the name.`, value: name})
+			.then(res => {
+				let name = res.trim();
+				functionObject["name"] = name;
+				return;
+			})
+			.then(res => vscode.window.showInputBox({prompt: `Your function name params are ${params}. If this is correct, press enter, else edit the (comma separated) params.`, value: params}))
+			.then(res => {
+				let params = res.trim();
+				functionObject["params"] = params;
+				return;
+			})
+			.then(res => vscode.window.showInputBox({prompt: `Your function code is ${code}. If this is correct, press enter, else edit the code. (The ctx variable should not appear in the code. It is automatically injected based on the context.)`, value: code}))
+			.then(res => {
+				let code = res.trim();
+				functionObject["code"] = code;
+				return;
+			})
+			.then(res => vscode.workspace.findFiles('flureeconfig.json', null, 1))
+			.then(res => getEndpoint(res))
+			.then(res => {
+				db = res.db;
+				network = res.network;
+				ip = res.ip;
+				return (`${ip}/fdb/${network}/${db}/transact`)
+			})
+			.then(res => pushSmartFunctions(res, functionObject))
+			.then(res => vscode.commands.executeCommand('extension.refreshCustomFunctions'))
+			.catch(err => vscode.window.showErrorMessage("There was an error pushing this function: " + JSON.stringify(err)))
+		})
 	})
 
 	context.subscriptions.push(initSmartFunction, addFunction, pushFnToDb, refreshCustomFunctions);
