@@ -1,56 +1,79 @@
 {
-	"name": "flureesmartfunctionhelper",
-	"displayName": "FlureeSmartFunctionHelper",
-	"description": "A tool to help you create smart functions for Fluree.",
+	"name": "betaflureesmartfunctions",
+	"displayName": "Beta: Fluree Smart Functions",
+	"description": "Beta: A tool to help you create smart functions for Fluree.",
 	"version": "0.0.1",
+	"publisher": "Fluree",
 	"engines": {
 		"vscode": "^1.32.0"
 	},
+	"icon": "image.png",
 	"categories": [
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.initSmartFunction",
-		"onCommand:extension.addSmartFunction",
-		"onCommand:extension.pushFnToDb",
-		"onCommand:extension.refreshCustomFunctions"
+		"onCommand:extension.activateSmartFunction"
 	],
-	"main": "./extension.js",
+	"main": "./dist/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.initSmartFunction",
-				"title": "Fluree: Init Smart Function"
+				"command": "extension.activateSmartFunction",
+				"title": "Fluree: Activate Smart Function"
 			},
 			{
-				"command": "extension.addSmartFunction",
-				"title": "Fluree: Add Smart Function"
+				"command": "extension.createTempFun",
+				"title": "Fluree: Create Temp Function"
 			},
 			{
-				"command": "extension.pushFnToDb",
-				"title": "Fluree: Push Smart Function to DB"
+				"command": "extension.pushTempFunToDb",
+				"title": "Fluree: Push Temp Function to DB"
 			},
 			{
-				"command": "extension.refreshCustomFunctions",
-				"title": "Fluree: Refresh Custom Functions"
+				"command": "extension.refreshDbFunctions",
+				"title": "Fluree: Refresh DB Functions"
+			},
+			{
+				"command": "extension.addDbFnToSpec",
+				"title": "Fluree: Add DB Function to Spec"
+			},
+			{
+				"command": "extension.editPushDbFun",
+				"title": "Fluree: Edit and Push a DB Function"
+			},
+			{
+				"command": "extension.updateSchema",
+				"title": "Fluree: Update Schema"
+			},
+			{
+				"command": "extension.smartFunctionHelp",
+				"title": "Fluree: Smart Function Help"
 			}
 		]
 	},
 	"scripts": {
+		"vscode:prepublish": "webpack --mode production",
+		"compile": "webpack --mode none",
+		"watch": "webpack --mode none --watch",
 		"postinstall": "node ./node_modules/vscode/bin/install",
 		"test": "node ./node_modules/vscode/bin/test"
 	},
 	"devDependencies": {
+		"@types/mocha": "^2.2.42",
+		"@types/node": "^10.12.21",
+		"eslint": "^5.13.0",
 		"typescript": "^3.3.1",
 		"vscode": "^1.1.28",
-		"eslint": "^5.13.0",
-		"@types/node": "^10.12.21",
-		"@types/mocha": "^2.2.42"
+		"webpack": "^4.33.0",
+		"webpack-cli": "^3.3.4"
 	},
 	"dependencies": {
 		"child_process": "^1.0.2",
 		"closer": "^0.2.3",
 		"fetch": "^1.1.0",
 		"isomorphic-fetch": "^2.2.1"
-	}
+	},
+	"extensionDependencies": [
+		"betterthantomorrow.calva"
+	]
 }
