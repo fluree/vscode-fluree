@@ -1,7 +1,6 @@
 const vscode = require('vscode');
 const getConfigFile = require('./helperFunctions').getConfigFile;
 const getCurrentSelection = require('./helperFunctions').getCurrentSelection;
-const getSmartFunctions = require('./helperFunctions').getSmartFunctions;
 const sendReq = require('./helperFunctions').sendReq;
 const checkExitPromise = require('./helperFunctions').checkExitPromise;
 const smartFunctions = require('./smartFunctionList').smartFunctions;
@@ -55,7 +54,6 @@ function activate(context) {
 		} else {
 			let txn =  getCurrentSelection();
 			let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/transact`;
-
 			return sendReq(endpoint, txn, root)
 		}
 	})
@@ -66,7 +64,36 @@ function activate(context) {
 		} else {
 			let txn =  getCurrentSelection();
 			let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/query`
+			return sendReq(endpoint, txn, root)
+		}
+	})
 
+	let submitQueryWith = vscode.commands.registerCommand('extension.submitQueryWith', function(){
+		if (Object.keys(config).length === 0){
+			vscode.window.showErrorMessage("Please connect to a database first. `Fluree: Set Config`")
+		} else {
+			let txn =  getCurrentSelection();
+			let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/query-with`
+			return sendReq(endpoint, txn, root)
+		}
+	})
+
+	let submitGenFlakes = vscode.commands.registerCommand('extension.submitGenFlakes', function(){
+		if (Object.keys(config).length === 0){
+			vscode.window.showErrorMessage("Please connect to a database first. `Fluree: Set Config`")
+		} else {
+			let txn =  getCurrentSelection();
+			let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/gen-flakes`
+			return sendReq(endpoint, txn, root)
+		}
+	})
+
+	let submitTestTransactWith = vscode.commands.registerCommand('extension.submitTestTransactWith', function(){
+		if (Object.keys(config).length === 0){
+			vscode.window.showErrorMessage("Please connect to a database first. `Fluree: Set Config`")
+		} else {
+			let txn =  getCurrentSelection();
+			let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/test-transact-with`
 			return sendReq(endpoint, txn, root)
 		}
 	})
@@ -106,6 +133,9 @@ function activate(context) {
 		getConfig, 
 		submitTransaction,
 		submitQuery,
+		submitQueryWith,
+		submitGenFlakes,
+		submitTestTransactWith,
 		smartFunctionHelp
 		);
 }

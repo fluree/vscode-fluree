@@ -213,9 +213,10 @@ const smartFunctions = {
         "context": ["all"]
     },
     "query":  {
-        "arguments": "query string",
-        "example": ["(query \"{\\\"select\\\": [\\\"*\\\"], \\\"from\\\": \\\"_collection\\\"}\")"],
-        "doc": "Queries the current database. Takes a string as an argument.",
+        "arguments": "query-string (0.9.6+) OR select-string, from-string, where-string, block-string, limit-string",
+        "example": ["(query \"{\\\"select\\\": [\\\"*\\\"], \\\"from\\\": \\\"_collection\\\"}\")",
+    "(query \"[*]\" [\"book/editor\" \"Penguin\"] nil nil nil)"],
+        "doc": "Queries the current database. Make sure to doubly-escape the quotation marks in the query string",
         "context": ["all"]
     },
     "?s": {
@@ -277,6 +278,12 @@ const smartFunctions = {
         "example": ["(objF)"],
         "doc": "Sum of the value of all flakes being retracted in the current spec.",
         "context": ["_predicate/spec", "_collection/spec", "_predicate/txSpec"]
+    },
+    "relationship?": {
+        "arguments": "startSubject path endSubject",
+        "example": "(relationship? [\"_user/username\" \"anna\"] [\"_user/auth\" \"_auth/department\" \"company/_department\"] [\"company/name\" \"Fluree\"])",
+        "doc": "0.9.6+ Returns a true or false, depending on if there is a relationship between two subjects. Start and end subjects should resolve to either subject _ids or unique two-tuples. ",
+        "context": ["all"]
     }
 }
 

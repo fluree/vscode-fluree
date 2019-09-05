@@ -58,7 +58,11 @@ function sendReq(endpoint, body, root){
 	})
 	.then(res => {
 		let status = res.status;
-		return vscode.window.showInformationMessage(`Submitted. ${status ? `Status: ${status}`: '' } Check flureeResponse.txt`)
+		if(res.error === "db/invalid-action"){
+			return vscode.window.showInformationMessage(` Are you using a version of Fluree that supports this endpoint? ${status ? `Status: ${status}`: '' }. Check flureeResponse.txt`)
+		} else {
+			return vscode.window.showInformationMessage(`Submitted. ${status ? `Status: ${status}`: '' } Check flureeResponse.txt`)
+		}
 	})
 	.catch(err => {
 		let error = err.message || err;

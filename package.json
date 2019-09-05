@@ -2,7 +2,7 @@
 	"name": "fluree",
 	"displayName": "Fluree: Beta",
 	"description": "A Visual Studio Code extension for developing with Fluree.",
-	"version": "0.9.5",
+	"version": "0.9.6",
 	"publisher": "Fluree",
 	"engines": {
 		"vscode": "^1.32.0"
@@ -20,6 +20,9 @@
 		"onCommand:extension.getConfig",
 		"onCommand:extension.submitTransaction",
 		"onCommand:extension.submitQuery",
+		"onCommand:extension.submitQueryWith",
+		"onCommand:extension.submitTestTransactWith",
+		"onCommand:extension.submitGenFlakes",
 		"onCommand:extension.smartFunctionHelp",
 		"onCommand:extension.getSmartFunctions"
 	],
@@ -41,6 +44,18 @@
 			{
 				"command": "extension.submitQuery",
 				"title": "Fluree: Query"
+			},
+			{
+				"command": "extension.submitQueryWith",
+				"title": "Fluree: Query-With"
+			},
+			{
+				"command": "extension.submitGenFlakes",
+				"title": "Fluree: Gen-Flakes"
+			},
+			{
+				"command": "extension.submitTestTransactWith",
+				"title": "Fluree: Test-Transact-With"
 			},
 			{
 				"command": "extension.smartFunctionHelp",
