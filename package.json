@@ -1,49 +1,46 @@
 {
-	"name": "betaflureesmartfunctions",
-	"displayName": "Beta: Fluree Smart Functions",
-	"description": "Beta: A tool to help you create smart functions for Fluree.",
-	"version": "0.0.1",
+	"name": "fluree",
+	"displayName": "Fluree: Beta",
+	"description": "A Visual Studio Code extension for developing with Fluree.",
+	"version": "0.9.5",
 	"publisher": "Fluree",
 	"engines": {
 		"vscode": "^1.32.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/fluree/vscode-fluree-smart-function-helper"
 	},
 	"icon": "image.png",
 	"categories": [
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.activateSmartFunction"
+		"onCommand:extension.setConfig",
+		"onCommand:extension.getConfig",
+		"onCommand:extension.submitTransaction",
+		"onCommand:extension.submitQuery",
+		"onCommand:extension.smartFunctionHelp",
+		"onCommand:extension.getSmartFunctions"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.activateSmartFunction",
-				"title": "Fluree: Activate Smart Function"
+				"command": "extension.setConfig",
+				"title": "Fluree: Set Config"
 			},
 			{
-				"command": "extension.createTempFun",
-				"title": "Fluree: Create Temp Function"
+				"command": "extension.getConfig",
+				"title": "Fluree: Get Config"
 			},
 			{
-				"command": "extension.pushTempFunToDb",
-				"title": "Fluree: Push Temp Function to DB"
+				"command": "extension.submitTransaction",
+				"title": "Fluree: Transact"
 			},
 			{
-				"command": "extension.refreshDbFunctions",
-				"title": "Fluree: Refresh DB Functions"
-			},
-			{
-				"command": "extension.addDbFnToSpec",
-				"title": "Fluree: Add DB Function to Spec"
-			},
-			{
-				"command": "extension.editPushDbFun",
-				"title": "Fluree: Edit and Push a DB Function"
-			},
-			{
-				"command": "extension.updateSchema",
-				"title": "Fluree: Update Schema"
+				"command": "extension.submitQuery",
+				"title": "Fluree: Query"
 			},
 			{
 				"command": "extension.smartFunctionHelp",
@@ -69,11 +66,7 @@
 	},
 	"dependencies": {
 		"child_process": "^1.0.2",
-		"closer": "^0.2.3",
 		"fetch": "^1.1.0",
 		"isomorphic-fetch": "^2.2.1"
-	},
-	"extensionDependencies": [
-		"betterthantomorrow.calva"
-	]
+	}
 }

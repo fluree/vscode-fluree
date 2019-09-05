@@ -218,11 +218,23 @@ const smartFunctions = {
         "doc": "Queries the current database. Takes a string as an argument.",
         "context": ["all"]
     },
+    "?s": {
+        "arguments": "string (optional)",
+        "example": ["(s)"],
+        "doc": "Allows you to access all the predicates of the subject that the spec is being applied to. This function takes an optional string of additional-select-parameters. By default, this function will query {\"select\": [\"*\"], from: SUBJECT}, however, if you would like to follow the subject's relationships further, you can optionally include an additional select string. You do not need to include the glob character, *, in your select string. You can either not include any quotes in the select string, or doubly-escape them, for example: `\"[{person/user []}]\" or \"[{\\\"person/user\\\" [\\\"*\\\"]}]\"`. Your select string needs to be inside of a vector, [].",
+        "context": ["_predicate/spec", "_collection/spec", "_rule/fns"]
+    },
     "?sid": {
-        "arguments": "none",
-        "example": ["(== (?auth_id) (?sid))"],
+        "arguments": "select-string, from-string, where-string, block-string, limit-string",
+        "example": ["(query \"[*]\" [\"book/editor\" \"Penguin\"] nil nil nil)"],
         "doc": "The _id of the subject that the spec is being applied to",
         "context": ["_predicate/spec", "_collection/spec", "_rule/fns"]
+    },
+    "?p": {
+        "arguments": "string (optional)",
+        "example": ["(p)"],
+        "doc": "Allows you to access all the predicates of the predicate that the spec is being applied to. This function takes an optional string of additional-select-parameters. By default, this function will query {\"select\": [\"*\"], from: PREDICATE_ID }, however, if you would like to follow the predicate's relationships further, you can optionally include an additional select string. You do not need to include the glob character, *, in your select string. You can either not include any quotes in the select string, or doubly-escape them, for example: `\"[{person/user []}]\" or \"[{\\\"person/user\\\" [\\\"*\\\"]}]\"`. Your select string needs to be inside of a vector, [].",
+        "context": ["_predicate/spec", "_predicate/txSpec", "_collection/spec", "_rule/fns"]
     },
     "?pid": {
         "arguments": "none",
@@ -265,7 +277,7 @@ const smartFunctions = {
         "example": ["(objF)"],
         "doc": "Sum of the value of all flakes being retracted in the current spec.",
         "context": ["_predicate/spec", "_collection/spec", "_predicate/txSpec"]
-    } 
+    }
 }
 
 module.exports = {
