@@ -2,6 +2,10 @@
 
 Build better applications with a tamper-proof blockchain ledger, semantic graph query engine, linearly scalable query edge servers, and co-resident data security
 
+## Download
+
+To download the extension, search the VS Code Extension: Marketplace for `Fluree: Beta` or [download here](https://marketplace.visualstudio.com/items?itemName=Fluree.fluree).
+
 ## Extension 
 
 Welcome to the `Fluree` VS Code extension. This extension connects to a single Fluree database, and allows you to issue queries, transaction, and tests against that database. 
