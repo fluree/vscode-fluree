@@ -19,7 +19,7 @@ function activate(context) {
 		.then(res => {
 			if(res.length === 0){
 				let myConfig = {}
-				return vscode.window.showInputBox({prompt: `No 'flureeConfig.json' found. Please input the IP address where your db is running: `, value: "IP"})
+				return vscode.window.showInputBox({prompt: `No 'flureeConfig.json' found. Please input the IP address where your db is running. For example: http://localhost:8090: `, value: "IP"})
 				.then(res => {
 					myConfig["ip"] = res;
 					return vscode.window.showInputBox({prompt: `Please input the network your database is in: `, value: "Network"})
@@ -64,6 +64,36 @@ function activate(context) {
 		} else {
 			let txn =  getCurrentSelection();
 			let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/query`
+			return sendReq(endpoint, txn, root)
+		}
+	})
+
+	let submitHistoryQuery = vscode.commands.registerCommand('extension.submitHistoryQuery', function(){
+		if (Object.keys(config).length === 0){
+			vscode.window.showErrorMessage("Please connect to a database first. `Fluree: Set Config`")
+		} else {
+			let txn =  getCurrentSelection();
+			let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/history`
+			return sendReq(endpoint, txn, root)
+		}
+	})
+
+	let submitBlockQuery = vscode.commands.registerCommand('extension.submitBlockQuery', function(){
+		if (Object.keys(config).length === 0){
+			vscode.window.showErrorMessage("Please connect to a database first. `Fluree: Set Config`")
+		} else {
+			let txn =  getCurrentSelection();
+			let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/block`
+			return sendReq(endpoint, txn, root)
+		}
+	})
+
+	let submitMultiQuery = vscode.commands.registerCommand('extension.submitMultiQuery', function(){
+		if (Object.keys(config).length === 0){
+			vscode.window.showErrorMessage("Please connect to a database first. `Fluree: Set Config`")
+		} else {
+			let txn =  getCurrentSelection();
+			let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/multi-query`
 			return sendReq(endpoint, txn, root)
 		}
 	})
@@ -133,6 +163,9 @@ function activate(context) {
 		getConfig, 
 		submitTransaction,
 		submitQuery,
+		submitHistoryQuery,
+		submitBlockQuery,
+		submitMultiQuery,
 		submitQueryWith,
 		submitGenFlakes,
 		submitTestTransactWith,

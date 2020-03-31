@@ -12,7 +12,7 @@ Welcome to the `Fluree` VS Code extension. This extension connects to a single F
 
 Please note this is a beta version of the Fluree extension. Any issues and feature ideas can be sent to support@flur.ee. You can also join our [Slack channel](https://join.slack.com/t/flureedb/shared_invite/enQtNTM1NzI4MTEzODA4LWEzNTMzN2VmYjBiODQ5MDUzODg1M2E3OTBjNGVmM2EwNmZhMGMwNTg2ZmJiZjk2MjA5NDkwYTk0OTVhODQ1Y2U).
 
-The is extension version `0.9.5`, which is targeted to [Fluree release `0.9.5`](s3://fluree-releases-public/fluree-0.9.5.zip).
+The is extension version `0.12.0`, which is targeted to [Fluree release `0.12.0`](s3://fluree-releases-public/fluree-0.12.0.zip).
 
 ## Connecting to a Database
 
@@ -53,6 +53,12 @@ To issue a query, simply select a valid query with your cursor, and run the comm
 Note that the contents of `flureeResponse.txt` will be overwritten every time you issue a query or command. If you need to persist the results of a given query or transaction, please copy it into another file.
 
 We only support issuing queries in `FlureeQL`.
+
+## History, Block, Multi-Query 
+
+To issue a query of the types - block, history, or multi-query, simply select a valid query with your cursor, and run the command, `Fluree: Block Query`, `Fluree: Multi Query`, or `Fluree: History Query`. The results of the query will display in the file `flureeResponse.txt`. 
+
+Note that the contents of `flureeResponse.txt` will be overwritten every time you issue a query or command. If you need to persist the results of a given query or transaction, please copy it into another file.
 
 ## Gen Flakes 
 

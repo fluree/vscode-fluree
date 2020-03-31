@@ -2,14 +2,14 @@
 	"name": "fluree",
 	"displayName": "Fluree: Beta",
 	"description": "A Visual Studio Code extension for developing with Fluree.",
-	"version": "0.9.6",
+	"version": "0.12.0",
 	"publisher": "Fluree",
 	"engines": {
 		"vscode": "^1.32.0"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/fluree/vscode-fluree-smart-function-helper"
+		"url": "https://github.com/fluree/vscode-fluree"
 	},
 	"icon": "image.png",
 	"categories": [
@@ -20,6 +20,9 @@
 		"onCommand:extension.getConfig",
 		"onCommand:extension.submitTransaction",
 		"onCommand:extension.submitQuery",
+		"onCommand:extension.submitBlockQuery",
+		"onCommand:extension.submitHistoryQuery",
+		"onCommand:extension.submitMultiQuery",
 		"onCommand:extension.submitQueryWith",
 		"onCommand:extension.submitTestTransactWith",
 		"onCommand:extension.submitGenFlakes",
@@ -44,6 +47,18 @@
 			{
 				"command": "extension.submitQuery",
 				"title": "Fluree: Query"
+			},
+			{
+				"command": "extension.submitHistoryQuery",
+				"title": "Fluree: History Query"
+			},
+			{
+				"command": "extension.submitBlockQuery",
+				"title": "Fluree: Block Query"
+			},
+			{
+				"command": "extension.submitMultiQuery",
+				"title": "Fluree: Multi Query"
 			},
 			{
 				"command": "extension.submitQueryWith",
@@ -77,7 +92,8 @@
 		"typescript": "^3.3.1",
 		"vscode": "^1.1.36",
 		"webpack": "^4.33.0",
-		"webpack-cli": "^3.3.4"
+		"webpack-cli": "^3.3.4",
+		"tar": ">=2.2.2"
 	},
 	"dependencies": {
 		"child_process": "^1.0.2",
