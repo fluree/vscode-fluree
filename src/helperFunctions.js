@@ -105,8 +105,7 @@ function historyFetch(baseURL, _id) {
     });
 }
 
-function fetchCollections(baseURL, root) {
-  const subjectMap = {};
+function fetchSchemaSubjects(baseURL) {
   return fetch(`${baseURL}/query`, {
     method: 'POST',
     headers: {
@@ -128,72 +127,85 @@ function fetchCollections(baseURL, root) {
     }),
   })
     .then((res) => parseJSON(res))
-    .then((res) => res.json)
-    .then(async (res) => {
-      if (res.error) {
-        throw new Error(res.message || res.error);
+    .then((res) => res.json);
+}
+
+async function fetchHistory(res, baseURL) {
+  if (res.error) {
+    throw new Error(res.message || res.error);
+  }
+  const historyMap = res.map((el) => () => historyFetch(baseURL, el));
+  let index = 0;
+  const results = [];
+  while (historyMap.length > index) {
+    const newResults = await Promise.all(
+      historyMap.slice(index, index + 20).map((fn) => fn())
+    );
+    results.push(...newResults.flat());
+    index += 20;
+  }
+  return results;
+}
+
+function reduceHistory(res) {
+  const subjectMap = {};
+  const sortedRes = res
+    .filter((el) => el.block > 1 && el.asserted[0])
+    .sort((a, b) => a.block - b.block);
+  return sortedRes.reduce((prev, cur) => {
+    const asserted = cur.asserted.map((_tx) => {
+      if (!subjectMap[_tx._id]) {
+        subjectMap[_tx._id] = Object.keys(_tx).some((el) =>
+          /^_collection/.test(el)
+        )
+          ? ['_collection/name', _tx['_collection/name']]
+          : ['_predicate/name', _tx['_predicate/name']];
+        _tx._id = Object.keys(_tx).some((el) => /^_collection/.test(el))
+          ? '_collection'
+          : '_predicate';
+      } else {
+        _tx._id = subjectMap[_tx._id];
       }
-      const historyMap = res.map((el) => () => historyFetch(baseURL, el));
-      let index = 0;
-      const results = [];
-      while (historyMap.length > index) {
-        const newResults = await Promise.all(
-          historyMap.slice(index, index + 20).map((fn) => fn())
-        );
-        results.push(...newResults.flat());
-        index += 20;
+      return _tx;
+    });
+    if (prev[cur.block]) {
+      prev[cur.block] = [...prev[cur.block], ...asserted];
+    } else {
+      prev[cur.block] = asserted;
+    }
+    return prev;
+  }, {});
+}
+
+function writeDirectory(blockIndex, root) {
+  return new Promise((resolve, reject) => {
+    fs.mkdirSync(`${root}/migrations`, { recursive: true });
+    resolve(blockIndex);
+  });
+}
+
+function writeMigrations(blockIndex, root) {
+  const blockNos = Object.keys(blockIndex);
+  blockNos.forEach(async (block) => {
+    await fs.writeFile(
+      `${root}/migrations/block-${block}.json`,
+      JSON.stringify(blockIndex[block]),
+      (err) => {
+        if (err) throw err;
       }
-      return results;
-    })
-    .then((res) => {
-      const sortedRes = res
-        .filter((el) => el.block > 1 && el.asserted[0])
-        .sort((a, b) => a.block - b.block);
-      return sortedRes.reduce((prev, cur) => {
-        const asserted = cur.asserted.map((_tx) => {
-          if (!subjectMap[_tx._id]) {
-            subjectMap[_tx._id] = Object.keys(_tx).some((el) =>
-              /^_collection/.test(el)
-            )
-              ? ['_collection/name', _tx['_collection/name']]
-              : ['_predicate/name', _tx['_predicate/name']];
-            _tx._id = Object.keys(_tx).some((el) => /^_collection/.test(el))
-              ? '_collection'
-              : '_predicate';
-          } else {
-            _tx._id = subjectMap[_tx._id];
-          }
-          return _tx;
-        });
-        if (prev[cur.block]) {
-          prev[cur.block] = [...prev[cur.block], ...asserted];
-        } else {
-          prev[cur.block] = asserted;
-        }
-        return prev;
-      }, {});
-    })
-    .then((blockIndex) => {
-      return new Promise((resolve, reject) => {
-        fs.mkdirSync(`${root}/migrations`, { recursive: true });
-        resolve(blockIndex);
-      });
-    })
-    .then((blockIndex) => {
-      const blockNos = Object.keys(blockIndex);
-      blockNos.forEach(async (block) => {
-        await fs.writeFile(
-          `${root}/migrations/block-${block}.json`,
-          JSON.stringify(blockIndex[block]),
-          (err) => {
-            if (err) throw err;
-          }
-        );
-      });
-      return vscode.window.showInformationMessage(
-        `Success. Check migrations/ in your root directory`
-      );
-    })
+    );
+  });
+  return vscode.window.showInformationMessage(
+    `Success. Check migrations/ in your root directory`
+  );
+}
+
+function fetchMigrations(baseURL, root) {
+  return fetchSchemaSubjects(baseURL)
+    .then((res) => fetchHistory(res, baseURL))
+    .then(reduceHistory)
+    .then((blockIndex) => writeDirectory(blockIndex, root))
+    .then((blockIndex) => writeMigrations(blockIndex, root))
     .catch((err) => {
       let error = err.message || err;
       return vscode.window.showErrorMessage(JSON.stringify(error));
@@ -205,5 +217,5 @@ module.exports = {
   getCurrentSelection,
   sendReq,
   checkExitPromise,
-  fetchCollections,
+  fetchMigrations,
 };
