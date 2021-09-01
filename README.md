@@ -60,6 +60,15 @@ To issue a query of the types - block, history, or multi-query, simply select a 
 
 Note that the contents of `flureeResponse.txt` will be overwritten every time you issue a query or command. If you need to persist the results of a given query or transaction, please copy it into another file.
 
+## Get Schema Migration Files 
+
+To issue get-schema-migrations, simply run the command, `Fluree: Get Schema Migrations`. The results will display in the directory `migrations/`.
+
+Gen-schema-migrations returns a block-indexed set of updates to your ledger's schema, where each file is a valid JSON transaction that can be issued against Fluree to recreate steps in the state of the ledger's schema.
+
+The goal of this feature is to assist with source code version control across teams, and to track the history of a ledger's schema across each of the blocks relevant in the production of that schema.
+
+Note: this will only work with Fluree 0.11.0 and higher.
 ## Gen Flakes 
 
 To issue gen-flakes, simply select a valid transaction with your cursor, and run the command, `Fluree: Gen-Flakes`. The results will display in the file `flureeResponse.txt`. 

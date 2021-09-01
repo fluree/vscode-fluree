@@ -27,7 +27,8 @@
 		"onCommand:extension.submitTestTransactWith",
 		"onCommand:extension.submitGenFlakes",
 		"onCommand:extension.smartFunctionHelp",
-		"onCommand:extension.getSmartFunctions"
+		"onCommand:extension.getSmartFunctions",
+		"onCommand:extension.getMigrations"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
@@ -75,13 +76,17 @@
 			{
 				"command": "extension.smartFunctionHelp",
 				"title": "Fluree: Smart Function Help"
+			},
+			{
+				"command": "extension.getMigrations",
+				"title": "Fluree: Get Schema Migrations"
 			}
 		]
 	},
 	"scripts": {
 		"vscode:prepublish": "webpack --mode production",
-		"compile": "webpack --mode none",
-		"watch": "webpack --mode none --watch",
+		"compile": "webpack --mode development",
+		"watch": "webpack --mode development --watch",
 		"postinstall": "node ./node_modules/vscode/bin/install",
 		"test": "node ./node_modules/vscode/bin/test"
 	},
