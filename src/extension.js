@@ -4,6 +4,7 @@ const getCurrentSelection = require('./helperFunctions').getCurrentSelection;
 const sendReq = require('./helperFunctions').sendReq;
 const checkExitPromise = require('./helperFunctions').checkExitPromise;
 const smartFunctions = require('./smartFunctionList').smartFunctions;
+const fetchCollections = require('./helperFunctions').fetchCollections;
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -12,7 +13,8 @@ const smartFunctions = require('./smartFunctionList').smartFunctions;
 function activate(context) {
 	// A shared state object
 	let config = {};
-	let root = vscode.workspace.rootPath;
+	let root = vscode.workspace.rootPath
+
 
 	let setConfig = vscode.commands.registerCommand('extension.setConfig', function(){
 		vscode.workspace.findFiles('flureeConfig.json', null, 1)
@@ -158,6 +160,18 @@ function activate(context) {
 		.catch(err => vscode.window.showErrorMessage("Error: " + err.message))
 	})
 
+	let getMigrations = vscode.commands.registerCommand('extension.getMigrations', function () {
+		if (Object.keys(config).length === 0) {
+          vscode.window.showErrorMessage(
+            'Please connect to a database first. `Fluree: Set Config`'
+          );
+        } else {
+          let endpoint = `${config.ip}/fdb/${config.network}/${config.db}`;
+          return fetchCollections(endpoint, root)
+        }
+
+	})
+
 	context.subscriptions.push(
 		setConfig, 
 		getConfig, 
@@ -169,7 +183,8 @@ function activate(context) {
 		submitQueryWith,
 		submitGenFlakes,
 		submitTestTransactWith,
-		smartFunctionHelp
+		smartFunctionHelp,
+		getMigrations
 		);
 }
 
