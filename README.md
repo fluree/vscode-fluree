@@ -22,7 +22,7 @@ To connect to a database, you must have a Fluree database running. You can eithe
 
 If you want to use a config file, create a `flureeConfig.json` file in the parent directory for your project. This file should include a single map with the following key-value pairs.
 
-```
+```json
 {
     "network": "example",
     "db": "one",
@@ -64,7 +64,7 @@ Note that the contents of `flureeResponse.txt` will be overwritten every time yo
 
 To issue get-schema-migrations, simply run the command, `Fluree: Get Schema Migrations`. The results will display in the directory `migrations/`.
 
-Gen-schema-migrations returns a block-indexed set of updates to your ledger's schema, where each file is a valid JSON transaction that can be issued against Fluree to recreate steps in the state of the ledger's schema.
+Get-schema-migrations returns a block-indexed set of updates to your ledger's schema, where each file is a valid JSON transaction that can be issued against Fluree to recreate steps in the state of the ledger's schema.
 
 The goal of this feature is to assist with source code version control across teams, and to track the history of a ledger's schema across each of the blocks relevant in the production of that schema.
 
