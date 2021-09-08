@@ -186,9 +186,9 @@ function writeDirectory(blockIndex, root) {
 
 function writeMigrations(blockIndex, root) {
   const blockNos = Object.keys(blockIndex);
-  blockNos.forEach(async (block) => {
+  blockNos.forEach(async (block, index) => {
     await fs.writeFile(
-      `${root}/migrations/block-${block}.json`,
+      `${root}/migrations/${String(index).padStart(5, '0')}.json`,
       JSON.stringify(blockIndex[block]),
       (err) => {
         if (err) throw err;
