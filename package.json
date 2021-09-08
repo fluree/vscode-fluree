@@ -1,109 +1,109 @@
 {
-	"name": "fluree",
-	"displayName": "Fluree: Beta",
-	"description": "A Visual Studio Code extension for developing with Fluree.",
-	"version": "0.17.0",
-	"publisher": "Fluree",
-	"engines": {
-		"vscode": "^1.32.0"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/fluree/vscode-fluree"
-	},
-	"icon": "Dark Brandmark.png",
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"onCommand:extension.setConfig",
-		"onCommand:extension.getConfig",
-		"onCommand:extension.submitTransaction",
-		"onCommand:extension.submitQuery",
-		"onCommand:extension.submitBlockQuery",
-		"onCommand:extension.submitHistoryQuery",
-		"onCommand:extension.submitMultiQuery",
-		"onCommand:extension.submitQueryWith",
-		"onCommand:extension.submitTestTransactWith",
-		"onCommand:extension.submitGenFlakes",
-		"onCommand:extension.smartFunctionHelp",
-		"onCommand:extension.getSmartFunctions",
-		"onCommand:extension.getMigrations"
-	],
-	"main": "./dist/extension.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "extension.setConfig",
-				"title": "Fluree: Set Config"
-			},
-			{
-				"command": "extension.getConfig",
-				"title": "Fluree: Get Config"
-			},
-			{
-				"command": "extension.submitTransaction",
-				"title": "Fluree: Transact"
-			},
-			{
-				"command": "extension.submitQuery",
-				"title": "Fluree: Query"
-			},
-			{
-				"command": "extension.submitHistoryQuery",
-				"title": "Fluree: History Query"
-			},
-			{
-				"command": "extension.submitBlockQuery",
-				"title": "Fluree: Block Query"
-			},
-			{
-				"command": "extension.submitMultiQuery",
-				"title": "Fluree: Multi Query"
-			},
-			{
-				"command": "extension.submitQueryWith",
-				"title": "Fluree: Query-With"
-			},
-			{
-				"command": "extension.submitGenFlakes",
-				"title": "Fluree: Gen-Flakes"
-			},
-			{
-				"command": "extension.submitTestTransactWith",
-				"title": "Fluree: Test-Transact-With"
-			},
-			{
-				"command": "extension.smartFunctionHelp",
-				"title": "Fluree: Smart Function Help"
-			},
-			{
-				"command": "extension.getMigrations",
-				"title": "Fluree: Get Schema Migrations"
-			}
-		]
-	},
-	"scripts": {
-		"vscode:prepublish": "webpack --mode production",
-		"compile": "webpack --mode development",
-		"watch": "webpack --mode development --watch",
-		"postinstall": "node ./node_modules/vscode/bin/install",
-		"test": "node ./node_modules/vscode/bin/test"
-	},
-	"devDependencies": {
-		"@types/mocha": "^2.2.42",
-		"@types/node": "^10.17.28",
-		"eslint": "^5.16.0",
-		"minimist": ">=1.2.2",
-		"tar": "^6.1.9",
-		"typescript": "^3.9.7",
-		"vscode": "^1.1.37",
-		"webpack": "^4.44.1",
-		"webpack-cli": "^3.3.12"
-	},
-	"dependencies": {
-		"child_process": "^1.0.2",
-		"fetch": "^1.1.0",
-		"isomorphic-fetch": "^2.2.1"
-	}
+  "name": "fluree",
+  "displayName": "Fluree: Beta",
+  "description": "A Visual Studio Code extension for developing with Fluree.",
+  "version": "0.17.1",
+  "publisher": "Fluree",
+  "engines": {
+    "vscode": "^1.32.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fluree/vscode-fluree"
+  },
+  "icon": "Dark Brandmark.png",
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:extension.setConfig",
+    "onCommand:extension.getConfig",
+    "onCommand:extension.submitTransaction",
+    "onCommand:extension.submitQuery",
+    "onCommand:extension.submitBlockQuery",
+    "onCommand:extension.submitHistoryQuery",
+    "onCommand:extension.submitMultiQuery",
+    "onCommand:extension.submitQueryWith",
+    "onCommand:extension.submitTestTransactWith",
+    "onCommand:extension.submitGenFlakes",
+    "onCommand:extension.smartFunctionHelp",
+    "onCommand:extension.getSmartFunctions",
+    "onCommand:extension.getMigrations"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.setConfig",
+        "title": "Fluree: Set Config"
+      },
+      {
+        "command": "extension.getConfig",
+        "title": "Fluree: Get Config"
+      },
+      {
+        "command": "extension.submitTransaction",
+        "title": "Fluree: Transact"
+      },
+      {
+        "command": "extension.submitQuery",
+        "title": "Fluree: Query"
+      },
+      {
+        "command": "extension.submitHistoryQuery",
+        "title": "Fluree: History Query"
+      },
+      {
+        "command": "extension.submitBlockQuery",
+        "title": "Fluree: Block Query"
+      },
+      {
+        "command": "extension.submitMultiQuery",
+        "title": "Fluree: Multi Query"
+      },
+      {
+        "command": "extension.submitQueryWith",
+        "title": "Fluree: Query-With"
+      },
+      {
+        "command": "extension.submitGenFlakes",
+        "title": "Fluree: Gen-Flakes"
+      },
+      {
+        "command": "extension.submitTestTransactWith",
+        "title": "Fluree: Test-Transact-With"
+      },
+      {
+        "command": "extension.smartFunctionHelp",
+        "title": "Fluree: Smart Function Help"
+      },
+      {
+        "command": "extension.getMigrations",
+        "title": "Fluree: Get Schema Migrations"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "webpack --mode production",
+    "compile": "webpack --mode development",
+    "watch": "webpack --mode development --watch",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.42",
+    "@types/node": "^10.17.28",
+    "eslint": "^5.16.0",
+    "minimist": ">=1.2.2",
+    "tar": "^6.1.9",
+    "typescript": "^3.9.7",
+    "vscode": "^1.1.37",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "fetch": "^1.1.0",
+    "isomorphic-fetch": "^2.2.1"
+  }
 }
