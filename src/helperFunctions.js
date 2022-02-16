@@ -14,8 +14,8 @@ function getConfigFile(res) {
     .then((doc) => {
       let text = doc.getText();
       text = JSON.parse(text);
-      let { network, db, ip } = text;
-      return { network: network, db: db, ip: ip };
+      let { network, db, ip, api_key } = text;
+      return { network: network, db: db, ip: ip, api_key: api_key };
     })
     .catch((err) => vscode.window.showErrorMessage(err.message));
 }
@@ -41,13 +41,14 @@ function parseJSON(response) {
     });
 }
 
-function sendReq(endpoint, body, root) {
+function sendReq(endpoint, body, root, options={}) {
   const headers = { 'Content-Type': 'application/json' };
 
   const fetchOpts = {
     headers: headers,
     method: 'POST',
     body: body,
+    ...options
   };
 
   return fetch(endpoint, fetchOpts)

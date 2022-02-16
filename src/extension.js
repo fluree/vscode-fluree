@@ -117,7 +117,8 @@ function activate(context) {
       } else {
         let txn = getCurrentSelection();
         let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/query`;
-        return sendReq(endpoint, txn, root);
+        let options = {"Content-Type": `Bearer ${config.api_key}`} || {}
+        return sendReq(endpoint, txn, root, options);
       }
     }
   );
