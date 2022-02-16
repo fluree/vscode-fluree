@@ -7,6 +7,15 @@ function writeToFile(filePath, txt) {
   return fs.writeFileSync(filePath, body);
 }
 
+function hasApiKey(api_key) {
+  if(api_key !== '' || typeof(api_key) !== 'undefined') {
+    return false
+  } else {
+    return true
+  }
+  
+}
+
 function getConfigFile(res) {
   let uri = res[0]['path'];
   return vscode.workspace
@@ -42,13 +51,12 @@ function parseJSON(response) {
 }
 
 function sendReq(endpoint, body, root, options={}) {
-  const headers = { 'Content-Type': 'application/json' };
+  const headers = { 'Content-Type': 'application/json', ...options };
 
   const fetchOpts = {
     headers: headers,
     method: 'POST',
-    body: body,
-    ...options
+    body: body
   };
 
   return fetch(endpoint, fetchOpts)
@@ -106,11 +114,12 @@ function historyFetch(baseURL, _id) {
     });
 }
 
-function fetchSchemaSubjects(baseURL) {
+function fetchSchemaSubjects(baseURL, options={}) {
   return fetch(`${baseURL}/query`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...options
     },
     body: JSON.stringify({
       selectDistinct: '?s',
@@ -201,8 +210,8 @@ function writeMigrations(blockIndex, root) {
   );
 }
 
-function fetchMigrations(baseURL, root) {
-  return fetchSchemaSubjects(baseURL)
+function fetchMigrations(baseURL, root, options={}) {
+  return fetchSchemaSubjects(baseURL, options)
     .then((res) => fetchHistory(res, baseURL))
     .then(reduceHistory)
     .then((blockIndex) => writeDirectory(blockIndex, root))
@@ -219,4 +228,5 @@ module.exports = {
   sendReq,
   checkExitPromise,
   fetchMigrations,
+  hasApiKey
 };

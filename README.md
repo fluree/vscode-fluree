@@ -24,9 +24,20 @@ If you want to use a config file, create a `flureeConfig.json` file in the paren
 
 ```json
 {
-    "network": "example",
-    "db": "one",
-    "ip": "http://localhost:8090"
+  "network": "example",
+  "db": "one",
+  "ip": "http://localhost:8090"
+}
+```
+
+With Fluree Nexus you can add an API key:
+
+```json
+{
+  "network": "fluree",
+  "db": "12345678",
+  "ip": "https://api.dev.flur.ee",
+  "api_key": "al;sdfkjasl;dfjkas;lfaskjsldfkjas;df"
 }
 ```
 

@@ -5,6 +5,7 @@ const sendReq = require('./helperFunctions').sendReq;
 const checkExitPromise = require('./helperFunctions').checkExitPromise;
 const smartFunctions = require('./smartFunctionList').smartFunctions;
 const fetchMigrations = require('./helperFunctions').fetchMigrations;
+const hasApiKey = require('./helperFunctions').hasApiKey;
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -44,6 +45,12 @@ function activate(context) {
               })
               .then((res) => {
                 myConfig['db'] = res;
+                return vscode.window.showInputBox({
+                  prompt: `Please input your api key if using Nexus: `,
+                });
+              })
+              .then((res) => {
+                myConfig['api_key'] = res;
                 return myConfig;
               })
               .catch((err) =>
@@ -65,7 +72,9 @@ function activate(context) {
               ' Db: ' +
               config.db +
               ' IP: ' +
-              config.ip
+              config.ip + 
+              ' API_KEY: ' + 
+              (config.api_key || '')
           )
         )
         .catch((err) =>
@@ -87,7 +96,9 @@ function activate(context) {
           ' Db: ' +
           config.db +
           ' IP: ' +
-          config.ip
+          config.ip +
+          ' API_KEY: ' + 
+          (config.api_key || '')
       );
     }
   );
@@ -102,7 +113,11 @@ function activate(context) {
       } else {
         let txn = getCurrentSelection();
         let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/transact`;
-        return sendReq(endpoint, txn, root);
+        let options = {};
+        if (hasApiKey(config.api_key)) {
+          options = {"Authorization": `Bearer ${config.api_key}`}
+        }
+        return sendReq(endpoint, txn, root, options);
       }
     }
   );
@@ -117,7 +132,10 @@ function activate(context) {
       } else {
         let txn = getCurrentSelection();
         let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/query`;
-        let options = {"Content-Type": `Bearer ${config.api_key}`} || {}
+        let options = {};
+        if (hasApiKey(config.api_key)) {
+          options = {"Authorization": `Bearer ${config.api_key}`}
+        }
         return sendReq(endpoint, txn, root, options);
       }
     }
@@ -133,7 +151,11 @@ function activate(context) {
       } else {
         let txn = getCurrentSelection();
         let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/history`;
-        return sendReq(endpoint, txn, root);
+        let options = {};
+        if (hasApiKey(config.api_key)) {
+          options = {"Authorization": `Bearer ${config.api_key}`}
+        }
+        return sendReq(endpoint, txn, root, options);
       }
     }
   );
@@ -148,7 +170,11 @@ function activate(context) {
       } else {
         let txn = getCurrentSelection();
         let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/block`;
-        return sendReq(endpoint, txn, root);
+        let options = {};
+        if (hasApiKey(config.api_key)) {
+          options = {"Authorization": `Bearer ${config.api_key}`}
+        }
+        return sendReq(endpoint, txn, root, options);
       }
     }
   );
@@ -163,7 +189,11 @@ function activate(context) {
       } else {
         let txn = getCurrentSelection();
         let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/multi-query`;
-        return sendReq(endpoint, txn, root);
+        let options = {};
+        if (hasApiKey(config.api_key)) {
+          options = {"Authorization": `Bearer ${config.api_key}`}
+        }
+        return sendReq(endpoint, txn, root, options);
       }
     }
   );
@@ -178,7 +208,11 @@ function activate(context) {
       } else {
         let txn = getCurrentSelection();
         let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/query-with`;
-        return sendReq(endpoint, txn, root);
+        let options = {};
+        if (hasApiKey(config.api_key)) {
+          options = {"Authorization": `Bearer ${config.api_key}`}
+        }
+        return sendReq(endpoint, txn, root, options);
       }
     }
   );
@@ -193,7 +227,11 @@ function activate(context) {
       } else {
         let txn = getCurrentSelection();
         let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/gen-flakes`;
-        return sendReq(endpoint, txn, root);
+        let options = {};
+        if (hasApiKey(config.api_key)) {
+          options = {"Authorization": `Bearer ${config.api_key}`}
+        }
+        return sendReq(endpoint, txn, root, options);
       }
     }
   );
@@ -208,7 +246,11 @@ function activate(context) {
       } else {
         let txn = getCurrentSelection();
         let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/test-transact-with`;
-        return sendReq(endpoint, txn, root);
+        let options = {};
+        if (hasApiKey(config.api_key)) {
+          options = {"Authorization": `Bearer ${config.api_key}`}
+        }
+        return sendReq(endpoint, txn, root, options);
       }
     }
   );
@@ -279,7 +321,11 @@ function activate(context) {
         );
       } else {
         let endpoint = `${config.ip}/fdb/${config.network}/${config.db}`;
-        return fetchMigrations(endpoint, root);
+        let options = {};
+        if (hasApiKey(config.api_key)) {
+          options = {"Authorization": `Bearer ${config.api_key}`}
+        }
+        return fetchMigrations(endpoint, root, options);
       }
     }
   );
