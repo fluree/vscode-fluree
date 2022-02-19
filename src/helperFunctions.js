@@ -8,11 +8,7 @@ function writeToFile(filePath, txt) {
 }
 
 function hasApiKey(api_key) {
-  if(api_key !== '' || typeof(api_key) !== 'undefined') {
-    return false
-  } else {
-    return true
-  }
+  return (api_key || api_key.length > 0);
   
 }
 
