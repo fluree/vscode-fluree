@@ -22,6 +22,7 @@ async function submitQuery() {
 suite("Extension Test Suite", () => {
     vscode.window.showInformationMessage("Start all tests.");
     test("Make a query", async () => {
+        //NOTE: Requires a ledger running on localhost:8090 with a `test/test` ledger
         const fluree = vscode.workspace.getConfiguration();
         const uri = vscode.Uri.file(path.join(__dirname + "/../../../src/test/fixtures/" + "query.json"));
         const testDocument = await vscode.workspace.openTextDocument(uri);
@@ -30,7 +31,16 @@ suite("Extension Test Suite", () => {
         vscode.commands.executeCommand("editor.action.selectAll");
         await submitQuery();
         await sleep(1000);
-        assert.strictEqual(true, true);
+        const resultsEditor = vscode.window.activeTextEditor;
+        if (resultsEditor) {
+            let document = resultsEditor.document;
+            // Get the document text
+            const documentText = document.getText();
+            const jsonMap = JSON.parse(documentText);
+            const hasUserCollection = jsonMap.some((e) => e["_collection/name"] === "_user");
+            assert.strictEqual(true, hasUserCollection);
+            // DO SOMETHING WITH `documentText`
+        }
         //   // vscode.workspace
         //   //   .openTextDocument("Untitled-1")
         //   //   .then((doc) => vscode.window.showTextDocument(doc));

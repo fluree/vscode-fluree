@@ -4,8 +4,6 @@ import * as path from "path";
 // as well as import your extension to test it
 import * as vscode from "vscode";
 
-import * as myExtension from "../../extension";
-
 async function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -38,16 +36,18 @@ suite("Extension Test Suite", () => {
 
     vscode.commands.executeCommand("editor.action.selectAll");
     await submitQuery();
-    await sleep(1000);
-    assert.strictEqual(true, true);
+    await sleep(1000); //let the results load
 
-    //   // vscode.workspace
-    //   //   .openTextDocument("Untitled-1")
-    //   //   .then((doc) => vscode.window.showTextDocument(doc));
-    //   console.log("in here");
-    // });
-
-    //console.log("here");
-    //});
+    const resultsEditor = vscode.window.activeTextEditor;
+    if (resultsEditor) {
+      let document = resultsEditor.document;
+      const documentText = document.getText();
+      const jsonMap: { _id: string; "_collection/name": string }[] =
+        JSON.parse(documentText);
+      const hasUserCollection = jsonMap.some(
+        (e) => e["_collection/name"] === "_user"
+      );
+      assert.strictEqual(true, hasUserCollection);
+    }
   }).timeout(5000);
 });
