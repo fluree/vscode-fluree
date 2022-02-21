@@ -18,15 +18,26 @@ type ConfigType = {
   db?: string;
   network?: string;
 };
+
+const showResults = (results: any) => {
+  return vscode.workspace
+    .openTextDocument({
+      language: "json",
+      content: JSON.stringify(results, null, 2),
+    })
+    .then((doc) => {
+      return vscode.window.showTextDocument(doc);
+    });
+};
+
 export async function activate(context: vscode.ExtensionContext) {
-  let config: ConfigType;
+  let config: ConfigType = {};
   let root = vscode.workspace.rootPath || "";
 
   let setTestConfig = vscode.commands.registerCommand(
     "extension.setTestConfig",
     () => {
       config = { ip: "http://localhost:8090", network: "test", db: "test" };
-      console.log("Test Config Set: ", config);
     }
   );
 
@@ -140,21 +151,22 @@ export async function activate(context: vscode.ExtensionContext) {
         if (hasApiKey(config.apiKey)) {
           headers = { authorization: `Bearer ${config.apiKey}` };
         }
-        return sendReq(endpoint, txn, root, headers);
+        return sendReq(endpoint, txn, root, headers)
+          .then((results: any) => showResults(results))
+          .catch((err: any) => console.log("error: ", err));
       }
     }
   );
 
   let submitQuery = vscode.commands.registerCommand(
     "extension.submitQuery",
-    async () => {
+    () => {
       if (Object.keys(config).length === 0) {
         vscode.window.showErrorMessage(
           "Please connect to a database first. `Fluree: Set Config`"
         );
       } else {
         let txn = getCurrentSelection() || "";
-        console.log("txn: ", txn);
         let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/query`;
         let headers = {};
         if (hasApiKey(config.apiKey)) {
@@ -162,17 +174,7 @@ export async function activate(context: vscode.ExtensionContext) {
         }
         //return sendReq(endpoint, txn, root, headers);
         sendReq(endpoint, txn, root, headers)
-          .then((results: any) => {
-            console.log("query results: ", results);
-            return vscode.workspace
-              .openTextDocument({
-                language: "json",
-                content: JSON.stringify(results, null, 2),
-              })
-              .then((doc) => {
-                return vscode.window.showTextDocument(doc);
-              });
-          })
+          .then((results: any) => showResults(results))
           .catch((err: any) => console.log("error: ", err));
       }
     }
@@ -192,7 +194,9 @@ export async function activate(context: vscode.ExtensionContext) {
         if (hasApiKey(config.apiKey)) {
           headers = { authorization: `Bearer ${config.apiKey}` };
         }
-        return sendReq(endpoint, txn, root, headers);
+        return sendReq(endpoint, txn, root, headers)
+          .then((results: any) => showResults(results))
+          .catch((err: any) => console.log("error: ", err));
       }
     }
   );
@@ -211,7 +215,9 @@ export async function activate(context: vscode.ExtensionContext) {
         if (hasApiKey(config.apiKey)) {
           headers = { authorization: `Bearer ${config.apiKey}` };
         }
-        return sendReq(endpoint, txn, root, headers);
+        return sendReq(endpoint, txn, root, headers)
+          .then((results: any) => showResults(results))
+          .catch((err: any) => console.log("error: ", err));
       }
     }
   );
@@ -230,7 +236,9 @@ export async function activate(context: vscode.ExtensionContext) {
         if (hasApiKey(config.apiKey)) {
           headers = { authorization: `Bearer ${config.apiKey}` };
         }
-        return sendReq(endpoint, txn, root, headers);
+        return sendReq(endpoint, txn, root, headers)
+          .then((results: any) => showResults(results))
+          .catch((err: any) => console.log("error: ", err));
       }
     }
   );
@@ -249,7 +257,9 @@ export async function activate(context: vscode.ExtensionContext) {
         if (hasApiKey(config.apiKey)) {
           headers = { authorization: `Bearer ${config.apiKey}` };
         }
-        return sendReq(endpoint, txn, root, headers);
+        return sendReq(endpoint, txn, root, headers)
+          .then((results: any) => showResults(results))
+          .catch((err: any) => console.log("error: ", err));
       }
     }
   );
@@ -268,7 +278,9 @@ export async function activate(context: vscode.ExtensionContext) {
         if (hasApiKey(config.apiKey)) {
           headers = { authorization: `Bearer ${config.apiKey}` };
         }
-        return sendReq(endpoint, txn, root, headers);
+        return sendReq(endpoint, txn, root, headers)
+          .then((results: any) => showResults(results))
+          .catch((err: any) => console.log("error: ", err));
       }
     }
   );
@@ -287,7 +299,9 @@ export async function activate(context: vscode.ExtensionContext) {
         if (hasApiKey(config.apiKey)) {
           headers = { authorization: `Bearer ${config.apiKey}` };
         }
-        return sendReq(endpoint, txn, root, headers);
+        return sendReq(endpoint, txn, root, headers)
+          .then((results: any) => showResults(results))
+          .catch((err: any) => console.log("error: ", err));
       }
     }
   );
