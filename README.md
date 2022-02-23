@@ -24,9 +24,9 @@ If you want to use a config file, create a `flureeConfig.json` file in the paren
 
 ```json
 {
-    "network": "example",
-    "db": "one",
-    "ip": "http://localhost:8090"
+  "network": "example",
+  "db": "one",
+  "ip": "http://localhost:8090"
 }
 ```
 

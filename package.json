@@ -1,21 +1,16 @@
 {
   "name": "fluree",
-  "displayName": "Fluree: Beta",
-  "description": "A Visual Studio Code extension for developing with Fluree.",
-  "version": "0.17.1",
-  "publisher": "Fluree",
+  "displayName": "fluree",
+  "description": "Fluree",
+  "version": "1.0.0-beta18",
   "engines": {
-    "vscode": "^1.32.0"
+    "vscode": "^1.64.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/fluree/vscode-fluree"
-  },
-  "icon": "Dark_Brandmark.png",
   "categories": [
     "Other"
   ],
   "activationEvents": [
+    "onCommand:extension.setTestConfig",
     "onCommand:extension.setConfig",
     "onCommand:extension.getConfig",
     "onCommand:extension.submitTransaction",
@@ -26,8 +21,6 @@
     "onCommand:extension.submitQueryWith",
     "onCommand:extension.submitTestTransactWith",
     "onCommand:extension.submitGenFlakes",
-    "onCommand:extension.smartFunctionHelp",
-    "onCommand:extension.getSmartFunctions",
     "onCommand:extension.getMigrations"
   ],
   "main": "./dist/extension.js",
@@ -74,36 +67,43 @@
         "title": "Fluree: Test-Transact-With"
       },
       {
-        "command": "extension.smartFunctionHelp",
-        "title": "Fluree: Smart Function Help"
-      },
-      {
         "command": "extension.getMigrations",
         "title": "Fluree: Get Schema Migrations"
+      },
+      {
+        "command": "extension.setTestConfig",
+        "title": "Fluree: Set Config for Testing Extension"
       }
     ]
   },
   "scripts": {
-    "vscode:prepublish": "webpack --mode production",
-    "compile": "webpack --mode development",
-    "watch": "webpack --mode development --watch",
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "node ./node_modules/vscode/bin/test"
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.42",
-    "@types/node": "^10.17.28",
-    "eslint": "^5.16.0",
-    "minimist": ">=1.2.2",
-    "tar": "^6.1.9",
-    "typescript": "^3.9.7",
-    "vscode": "^1.1.37",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
+    "@types/glob": "^7.2.0",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "14.x",
+    "@types/vscode": "^1.64.0",
+    "@typescript-eslint/eslint-plugin": "^5.9.1",
+    "@typescript-eslint/parser": "^5.9.1",
+    "@vscode/test-electron": "^2.0.3",
+    "eslint": "^8.6.0",
+    "glob": "^7.2.0",
+    "mocha": "^9.1.3",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.4",
+    "webpack": "^5.66.0",
+    "webpack-cli": "^4.9.1"
   },
   "dependencies": {
-    "child_process": "^1.0.2",
-    "fetch": "^1.1.0",
-    "isomorphic-fetch": "^2.2.1"
+    "isomorphic-fetch": "^3.0.0"
   }
 }
