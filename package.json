@@ -1,14 +1,19 @@
 {
   "name": "fluree",
   "displayName": "fluree",
-  "description": "Fluree",
-  "version": "1.0.0-beta18",
+  "description": "A Visual Studio Code extension for developing with Fluree.",
+  "publisher": "Fluree",
+  "version": "1.0.1",
   "engines": {
     "vscode": "^1.64.0"
   },
   "categories": [
     "Other"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fluree/vscode-fluree"
+  },
   "activationEvents": [
     "onCommand:extension.setTestConfig",
     "onCommand:extension.setConfig",
