@@ -62,12 +62,7 @@ function parseJSON(response: any) {
     });
 }
 
-async function sendReq(
-  endpoint: string,
-  body: string,
-  root: string,
-  extraHeaders = {}
-) {
+async function sendReq(endpoint: string, body: string, extraHeaders = {}) {
   const headers = { "content-type": "application/json", ...extraHeaders };
 
   const fetchOpts = {
@@ -75,17 +70,11 @@ async function sendReq(
     method: "POST",
     body: body,
   };
-  console.log("fetching: ", `${endpoint}: ${JSON.stringify(fetchOpts)}`);
+
   return fetch(endpoint, fetchOpts)
     .then((res: any) => parseJSON(res))
     .then((res: any) => {
-      console.log("response in fetch: ", res.json);
       return res.json;
-    })
-    .then((res: any) => {
-      const filePath = `${root}/flureeResponse.txt`;
-      //writeToFile(filePath, res);
-      return res;
     })
     .then((res: any) => {
       let status = res.status;

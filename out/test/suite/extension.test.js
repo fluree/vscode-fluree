@@ -24,30 +24,31 @@ suite("Extension Test Suite", () => {
     test("Make a query", async () => {
         //NOTE: Requires a ledger running on localhost:8090 with a `test/test` ledger
         const fluree = vscode.workspace.getConfiguration();
+        console.log(vscode.workspace.workspaceFolders);
+        const configString = JSON.stringify({
+            ip: "http://localhost:9090",
+            db: "test",
+            network: "test",
+        });
+        const configFile = vscode.Uri.parse("flureeConfig.json");
+        const edit = new vscode.WorkspaceEdit();
+        edit.insert(configFile, new vscode.Position(0, 0), configString);
+        let success = await vscode.workspace.applyEdit(edit);
         const uri = vscode.Uri.file(path.join(__dirname + "/../../../src/test/fixtures/" + "query.json"));
         const testDocument = await vscode.workspace.openTextDocument(uri);
         const editor = await vscode.window.showTextDocument(testDocument);
-        vscode.commands.executeCommand("extension.setTestConfig");
+        //vscode.commands.executeCommand("extension.setTestConfig");
         vscode.commands.executeCommand("editor.action.selectAll");
         await submitQuery();
-        await sleep(1000);
+        await sleep(1000); //let the results load
         const resultsEditor = vscode.window.activeTextEditor;
         if (resultsEditor) {
             let document = resultsEditor.document;
-            // Get the document text
             const documentText = document.getText();
             const jsonMap = JSON.parse(documentText);
             const hasUserCollection = jsonMap.some((e) => e["_collection/name"] === "_user");
             assert.strictEqual(true, hasUserCollection);
-            // DO SOMETHING WITH `documentText`
         }
-        //   // vscode.workspace
-        //   //   .openTextDocument("Untitled-1")
-        //   //   .then((doc) => vscode.window.showTextDocument(doc));
-        //   console.log("in here");
-        // });
-        //console.log("here");
-        //});
     }).timeout(5000);
 });
 //# sourceMappingURL=extension.test.js.map

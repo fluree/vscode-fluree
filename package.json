@@ -1,9 +1,10 @@
 {
   "name": "fluree",
-  "displayName": "fluree",
+  "displayName": "Fluree",
   "description": "A Visual Studio Code extension for developing with Fluree.",
+  "icon": "Dark_Brandmark.png",
   "publisher": "Fluree",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "engines": {
     "vscode": "^1.64.0"
   },
@@ -15,8 +16,8 @@
     "url": "https://github.com/fluree/vscode-fluree"
   },
   "activationEvents": [
-    "onCommand:extension.setTestConfig",
     "onCommand:extension.setConfig",
+    "onCommand:extension.setNexusConfig",
     "onCommand:extension.getConfig",
     "onCommand:extension.submitTransaction",
     "onCommand:extension.submitQuery",
@@ -26,7 +27,8 @@
     "onCommand:extension.submitQueryWith",
     "onCommand:extension.submitTestTransactWith",
     "onCommand:extension.submitGenFlakes",
-    "onCommand:extension.getMigrations"
+    "onCommand:extension.getMigrations",
+    "onCommand:extension.setTestConfig"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -78,8 +80,38 @@
       {
         "command": "extension.setTestConfig",
         "title": "Fluree: Set Config for Testing Extension"
+      },
+      {
+        "command": "extension.setNexusConfig",
+        "title": "Fluree: Set Config for working with Nexus datasets"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Fluree",
+      "type": "object",
+      "properties": {
+        "fluree.host": {
+          "type": "string",
+          "default": "http://localhost:8090",
+          "description": "The host URL of your fluree ledger or dataset"
+        },
+        "fluree.db": {
+          "type": "string",
+          "default": "",
+          "description": "The ledger or dataset name"
+        },
+        "fluree.network": {
+          "type": "string",
+          "default": "",
+          "description": "The network of your ledger or dataset"
+        },
+        "fluree.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "(optional) API_KEY for using Nexus"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",

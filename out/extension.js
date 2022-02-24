@@ -1,16 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.activate = void 0;
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 const vscode = require("vscode");
 const helperFunctions_1 = require("./helperFunctions");
+const showResults = (results) => {
+    return vscode.workspace
+        .openTextDocument({
+        language: "json",
+        content: JSON.stringify(results, null, 2),
+    })
+        .then((doc) => {
+        return vscode.window.showTextDocument(doc);
+    });
+};
 async function activate(context) {
-    let config;
-    let root = vscode.workspace.rootPath || "";
+    let config = {};
+    let root = vscode.workspace.rootPath;
     let setTestConfig = vscode.commands.registerCommand("extension.setTestConfig", () => {
         config = { ip: "http://localhost:8090", network: "test", db: "test" };
-        console.log("Test Config Set: ", config);
     });
     let setConfig = vscode.commands.registerCommand("extension.setConfig", () => {
         vscode.workspace
@@ -112,34 +119,25 @@ async function activate(context) {
             if ((0, helperFunctions_1.hasApiKey)(config.apiKey)) {
                 headers = { authorization: `Bearer ${config.apiKey}` };
             }
-            return (0, helperFunctions_1.sendReq)(endpoint, txn, root, headers);
+            return (0, helperFunctions_1.sendReq)(endpoint, txn, headers)
+                .then((results) => showResults(results))
+                .catch((err) => console.log("error: ", err));
         }
     });
-    let submitQuery = vscode.commands.registerCommand("extension.submitQuery", async () => {
+    let submitQuery = vscode.commands.registerCommand("extension.submitQuery", () => {
         if (Object.keys(config).length === 0) {
             vscode.window.showErrorMessage("Please connect to a database first. `Fluree: Set Config`");
         }
         else {
             let txn = (0, helperFunctions_1.getCurrentSelection)() || "";
-            console.log("txn: ", txn);
             let endpoint = `${config.ip}/fdb/${config.network}/${config.db}/query`;
             let headers = {};
             if ((0, helperFunctions_1.hasApiKey)(config.apiKey)) {
                 headers = { authorization: `Bearer ${config.apiKey}` };
             }
             //return sendReq(endpoint, txn, root, headers);
-            (0, helperFunctions_1.sendReq)(endpoint, txn, root, headers)
-                .then((results) => {
-                console.log("query results: ", results);
-                return vscode.workspace
-                    .openTextDocument({
-                    language: "json",
-                    content: JSON.stringify(results, null, 2),
-                })
-                    .then((doc) => {
-                    return vscode.window.showTextDocument(doc);
-                });
-            })
+            (0, helperFunctions_1.sendReq)(endpoint, txn, headers)
+                .then((results) => showResults(results))
                 .catch((err) => console.log("error: ", err));
         }
     });
@@ -154,7 +152,9 @@ async function activate(context) {
             if ((0, helperFunctions_1.hasApiKey)(config.apiKey)) {
                 headers = { authorization: `Bearer ${config.apiKey}` };
             }
-            return (0, helperFunctions_1.sendReq)(endpoint, txn, root, headers);
+            return (0, helperFunctions_1.sendReq)(endpoint, txn, headers)
+                .then((results) => showResults(results))
+                .catch((err) => console.log("error: ", err));
         }
     });
     let submitBlockQuery = vscode.commands.registerCommand("extension.submitBlockQuery", () => {
@@ -168,7 +168,9 @@ async function activate(context) {
             if ((0, helperFunctions_1.hasApiKey)(config.apiKey)) {
                 headers = { authorization: `Bearer ${config.apiKey}` };
             }
-            return (0, helperFunctions_1.sendReq)(endpoint, txn, root, headers);
+            return (0, helperFunctions_1.sendReq)(endpoint, txn, headers)
+                .then((results) => showResults(results))
+                .catch((err) => console.log("error: ", err));
         }
     });
     let submitMultiQuery = vscode.commands.registerCommand("extension.submitMultiQuery", () => {
@@ -182,7 +184,9 @@ async function activate(context) {
             if ((0, helperFunctions_1.hasApiKey)(config.apiKey)) {
                 headers = { authorization: `Bearer ${config.apiKey}` };
             }
-            return (0, helperFunctions_1.sendReq)(endpoint, txn, root, headers);
+            return (0, helperFunctions_1.sendReq)(endpoint, txn, headers)
+                .then((results) => showResults(results))
+                .catch((err) => console.log("error: ", err));
         }
     });
     let submitQueryWith = vscode.commands.registerCommand("extension.submitQueryWith", () => {
@@ -196,7 +200,9 @@ async function activate(context) {
             if ((0, helperFunctions_1.hasApiKey)(config.apiKey)) {
                 headers = { authorization: `Bearer ${config.apiKey}` };
             }
-            return (0, helperFunctions_1.sendReq)(endpoint, txn, root, headers);
+            return (0, helperFunctions_1.sendReq)(endpoint, txn, headers)
+                .then((results) => showResults(results))
+                .catch((err) => console.log("error: ", err));
         }
     });
     let submitGenFlakes = vscode.commands.registerCommand("extension.submitGenFlakes", () => {
@@ -210,7 +216,9 @@ async function activate(context) {
             if ((0, helperFunctions_1.hasApiKey)(config.apiKey)) {
                 headers = { authorization: `Bearer ${config.apiKey}` };
             }
-            return (0, helperFunctions_1.sendReq)(endpoint, txn, root, headers);
+            return (0, helperFunctions_1.sendReq)(endpoint, txn, headers)
+                .then((results) => showResults(results))
+                .catch((err) => console.log("error: ", err));
         }
     });
     let submitTestTransactWith = vscode.commands.registerCommand("extension.submitTestTransactWith", () => {
@@ -224,7 +232,9 @@ async function activate(context) {
             if ((0, helperFunctions_1.hasApiKey)(config.apiKey)) {
                 headers = { authorization: `Bearer ${config.apiKey}` };
             }
-            return (0, helperFunctions_1.sendReq)(endpoint, txn, root, headers);
+            return (0, helperFunctions_1.sendReq)(endpoint, txn, headers)
+                .then((results) => showResults(results))
+                .catch((err) => console.log("error: ", err));
         }
     });
     let getMigrations = vscode.commands.registerCommand("extension.getMigrations", () => {
@@ -237,7 +247,7 @@ async function activate(context) {
             if ((0, helperFunctions_1.hasApiKey)(config.apiKey)) {
                 headers = { authorization: `Bearer ${config.apiKey}` };
             }
-            return (0, helperFunctions_1.fetchMigrations)(endpoint, root, headers);
+            return (0, helperFunctions_1.fetchMigrations)(endpoint, root || "/tmp", headers);
         }
     });
     context.subscriptions.push(setTestConfig, setConfig, getConfig, submitTransaction, submitQuery, submitHistoryQuery, submitBlockQuery, submitMultiQuery, submitQueryWith, submitGenFlakes, submitTestTransactWith, getMigrations);

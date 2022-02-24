@@ -56,24 +56,17 @@ function parseJSON(response) {
         vscode.window.showErrorMessage(JSON.stringify(error));
     });
 }
-async function sendReq(endpoint, body, root, extraHeaders = {}) {
+async function sendReq(endpoint, body, extraHeaders = {}) {
     const headers = { "content-type": "application/json", ...extraHeaders };
     const fetchOpts = {
         headers: headers,
         method: "POST",
         body: body,
     };
-    console.log("fetching: ", `${endpoint}: ${JSON.stringify(fetchOpts)}`);
     return fetch(endpoint, fetchOpts)
         .then((res) => parseJSON(res))
         .then((res) => {
-        console.log("response in fetch: ", res.json);
         return res.json;
-    })
-        .then((res) => {
-        const filePath = `${root}/flureeResponse.txt`;
-        //writeToFile(filePath, res);
-        return res;
     })
         .then((res) => {
         let status = res.status;

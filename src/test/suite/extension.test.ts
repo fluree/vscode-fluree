@@ -27,11 +27,19 @@ suite("Extension Test Suite", () => {
   test("Make a query", async () => {
     //NOTE: Requires a ledger running on localhost:8090 with a `test/test` ledger
     const fluree = vscode.workspace.getConfiguration();
+    console.log(vscode.workspace.workspaceFolders);
+    const configString = JSON.stringify({
+      ip: "http://localhost:9090",
+      db: "test",
+      network: "test",
+    });
+
     const uri = vscode.Uri.file(
       path.join(__dirname + "/../../../src/test/fixtures/" + "query.json")
     );
     const testDocument = await vscode.workspace.openTextDocument(uri);
     const editor = await vscode.window.showTextDocument(testDocument);
+
     vscode.commands.executeCommand("extension.setTestConfig");
 
     vscode.commands.executeCommand("editor.action.selectAll");

@@ -12,35 +12,30 @@ Welcome to the `Fluree` VS Code extension. This extension connects to a single F
 
 Please note this is a beta version of the Fluree extension. Any issues and feature ideas can be sent to support@flur.ee. You can also join our [Slack channel](https://join.slack.com/t/flureedb/shared_invite/enQtNTM1NzI4MTEzODA4LWEzNTMzN2VmYjBiODQ5MDUzODg1M2E3OTBjNGVmM2EwNmZhMGMwNTg2ZmJiZjk2MjA5NDkwYTk0OTVhODQ1Y2U).
 
-The is extension version `0.17.0`, which is targeted to [Fluree release `1.0.0-beta`](https://fluree-releases-public.s3.amazonaws.com/fluree-1.0.0-beta10.zip).
+[Fluree release `1.0.0-beta18`](https://fluree-releases-public.s3.amazonaws.com/fluree-1.0.0-beta18.zip).
 
 ## Connecting to a Database
 
 To connect to a database, you must have a Fluree database running. You can either use a config file or manually specify your configuration details.
 
-### Config File
+### Configuring the extension
 
-If you want to use a config file, create a `flureeConfig.json` file in the parent directory for your project. This file should include a single map with the following key-value pairs.
-
-```json
-{
-  "network": "example",
-  "db": "one",
-  "ip": "http://localhost:8090"
-}
+```
+"fluree.host": "http://localhost:8090"
+"fluree.db": "test"
+"fluree.network": "test"
+"fluree.apiKey": "asldkfjasdl;kjas"
 ```
 
-Once you create this file, you will need to run the command: `Fluree: Set Config` see below.
+![Fluree Extension Configuration](https://raw.githubusercontent.com/fluree/vscode-fluree/main/images/configuration.png)
 
 ### Set Config
 
-To connect to a database, you will need to run the command `Fluree: Set Config`.
+You can set the config in VS Code user settings, but also, can run the Set Config command to show the values
 
-To view the Command Palette, you can click on `View` -> `Command Palette`. On Mac, the shortcut to open the Command Palette is `cmd + shift + p`.
+### Set Nexus Config
 
-If you have a valid `flureeConfig.json` file, this configuration will be set based on what is included in that file.
-
-If you do not, you will be asked to input your database's `ip`, `network`, and `db`.
+Allows you to input the URL from the Nexus Connect tab on your dataset to populate host, db, and network and prompt you for apiKey
 
 ### Get Config
 
@@ -48,7 +43,7 @@ You can run the command, `Fluree: Get Config` to view the current configuration.
 
 ## Query
 
-To issue a query, simply select a valid query with your cursor, and run the command, `Fluree: Query`. The results of the query will display in the file `flureeResponse.txt`.
+To issue a query, simply select a valid query with your cursor, and run the command, `Fluree: Query`.
 
 Note that the contents of `flureeResponse.txt` will be overwritten every time you issue a query or command. If you need to persist the results of a given query or transaction, please copy it into another file.
 
@@ -56,7 +51,7 @@ We only support issuing queries in `FlureeQL`.
 
 ## History, Block, Multi-Query
 
-To issue a query of the types - block, history, or multi-query, simply select a valid query with your cursor, and run the command, `Fluree: Block Query`, `Fluree: Multi Query`, or `Fluree: History Query`. The results of the query will display in the file `flureeResponse.txt`.
+To issue a query of the types - block, history, or multi-query, simply select a valid query with your cursor, and run the command, `Fluree: Block Query`, `Fluree: Multi Query`, or `Fluree: History Query`.
 
 Note that the contents of `flureeResponse.txt` will be overwritten every time you issue a query or command. If you need to persist the results of a given query or transaction, please copy it into another file.
 
@@ -113,10 +108,4 @@ Note: this will only work with Fluree 0.11.0 and higher.
 
 ## Transact
 
-To issue a transaction, simply select a valid transaction with your cursor, and run the command, `Fluree: Transact`. The results of the query will display in the file `flureeResponse.txt`. Transactions are submitted using the root auth in the database. There is no way to change this currently.
-
-Note that the contents of `flureeResponse.txt` will be overwritten every time you issue a query or command. If you need to persist the results of a given query or transaction, please copy it into another file.
-
-## Smart Function Help
-
-Issue the command, `Fluree: Smart Function Help` to see a list of all the smart functions in FlureeDB, as well as arguments, examples, and documentation.
+To issue a transaction, simply select a valid transaction with your cursor, and run the command, `Fluree: Transact`. Transactions are submitted using the root auth in the database. There is no way to change this currently.
