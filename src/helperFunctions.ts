@@ -110,11 +110,12 @@ function checkExitPromise(res: any, exitedFunction: any) {
   }
 }
 
-function historyFetch(baseURL: string, _id: any) {
+function historyFetch(baseURL: string, _id: any, extraHeaders = {}) {
   return fetch(`${baseURL}/history`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
+      ...extraHeaders,
     },
     body: JSON.stringify({
       history: _id,
@@ -153,11 +154,13 @@ function fetchSchemaSubjects(baseURL: string, extraHeaders = {}) {
     .then((res: any) => res.json);
 }
 
-async function fetchHistory(res: any, baseURL: string) {
+async function fetchHistory(res: any, baseURL: string, extraHeaders = {}) {
   if (res.error) {
     throw new Error(res.message || res.error);
   }
-  const historyMap = res.map((el: any) => () => historyFetch(baseURL, el));
+  const historyMap = res.map(
+    (el: any) => () => historyFetch(baseURL, el, extraHeaders)
+  );
   let index = 0;
   const results = [];
   while (historyMap.length > index) {
@@ -171,7 +174,7 @@ async function fetchHistory(res: any, baseURL: string) {
 }
 
 function reduceHistory(res: any) {
-  let subjectMap: { [key: number]: any; [name: string]: any };
+  let subjectMap: { [key: number]: any; [name: string]: any } = {};
   const sortedRes = res
     .filter((el: any) => el.block > 1 && el.asserted[0])
     .sort((a: any, b: any) => a.block - b.block);
@@ -229,7 +232,7 @@ function writeMigrations(blockIndex: any, root: string) {
 
 function fetchMigrations(baseURL: string, root: string, options = {}) {
   return fetchSchemaSubjects(baseURL, options)
-    .then((res: any) => fetchHistory(res, baseURL))
+    .then((res: any) => fetchHistory(res, baseURL, options))
     .then(reduceHistory)
     .then((blockIndex: any) => writeDirectory(blockIndex, root))
     .then((blockIndex: any) => writeMigrations(blockIndex, root))

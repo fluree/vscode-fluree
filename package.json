@@ -4,7 +4,7 @@
   "description": "A Visual Studio Code extension for developing with Fluree.",
   "icon": "Dark_Brandmark.png",
   "publisher": "Fluree",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "engines": {
     "vscode": "^1.64.0"
   },
